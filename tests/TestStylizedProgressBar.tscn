@@ -45,11 +45,11 @@ text = "Fill size"
 layout_mode = 2
 alignment = 1
 
-[node name="StylizedProgressBar" parent="VBoxContainer" instance=ExtResource("1_iayjx")]
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+text = "Color"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer"]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
@@ -60,6 +60,10 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 text = "  -  "
+
+[node name="StylizedProgressBar" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_iayjx")]
+layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="Increase" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
