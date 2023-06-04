@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://6aqc8g4pew4f"]
+
+[ext_resource type="Script" path="res://src/StylizedProgressBar.gd" id="1_2b0nt"]
+
+[node name="StylizedProgressBar" type="PanelContainer"]
+custom_minimum_size = Vector2(100, 20)
+offset_left = -50.0
+offset_top = -10.0
+offset_right = 50.0
+offset_bottom = 10.0
+script = ExtResource("1_2b0nt")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="Container" type="HBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Fill" type="ColorRect" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(6, 0)
+layout_mode = 2
+color = Color(1, 0.921569, 0.278431, 1)
