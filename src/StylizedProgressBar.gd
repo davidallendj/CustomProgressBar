@@ -81,6 +81,11 @@ func set_color(color: Color) -> void:
 		container.get_child(i).set_color(color)
 
 
+func set_value_color(index: int, color: Color) -> void:
+	index = clamp(index, 0, get_value())
+	container.get_child(index).set_color(color)
+
+
 func set_fill_size(value: Vector2) -> void:
 	var current_value: int = get_value()
 	for i in get_value():

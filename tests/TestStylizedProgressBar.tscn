@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cfcdm1qehxvki"]
 
-[ext_resource type="Script" path="res://tests/TestStylizedProgressBar.gd" id="1_ytf3f"]
-[ext_resource type="PackedScene" uid="uid://6aqc8g4pew4f" path="res://src/StylizedProgressBar.tscn" id="2_b1mg0"]
+[ext_resource type="Script" path="res://tests/TestStylizedProgressBar.gd" id="1_e0gwl"]
+[ext_resource type="PackedScene" uid="uid://6aqc8g4pew4f" path="res://src/StylizedProgressBar.tscn" id="1_iayjx"]
 
 [node name="TestStylizedProgressBar" type="CenterContainer"]
 anchors_preset = 15
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ytf3f")
+script = ExtResource("1_e0gwl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -36,10 +36,8 @@ text = "Max"
 layout_mode = 2
 alignment = 1
 
-[node name="StylizedProgressBar" parent="VBoxContainer" instance=ExtResource("2_b1mg0")]
-custom_minimum_size = Vector2(0, 20)
+[node name="StylizedProgressBar" parent="VBoxContainer" instance=ExtResource("1_iayjx")]
 layout_mode = 2
-size_flags_horizontal = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -53,3 +51,7 @@ text = "  -  "
 layout_mode = 2
 size_flags_horizontal = 3
 text = "  +  "
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
