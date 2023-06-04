@@ -2,7 +2,10 @@ extends PanelContainer
 
 @onready var fill 		:= %Fill
 @onready var container 	:= %Container
+
 @export var max_value	:= 10
+@export var fill_size	:= Vector2(5, 0)
+@export var color		:= Color.YELLOW
 
 enum fill_direction{
 	LEFT_TO_RIGHT,
@@ -22,13 +25,14 @@ func increment(value: int = 1) -> void:
 	var current_value: int 		= get_value()
 	var new_value 				= clamp(value, current_value, max_value);
 	var container_size: Vector2 = container.get_size()
-	var fill_size: float 		= floor(max_value / container_size.x) 
 	for i in range(current_value, current_value+value, 1):
 		if current_value+value > max_value:
 			break
 		var f = fill.duplicate()
 		container.add_child(f)
 		f.set_visible(true)
+		f.set_color(color)
+		f.set_custom_minimum_size(fill_size)
 
 
 func decrement(value: int = 1) -> void:
@@ -54,8 +58,21 @@ func get_max_value() -> int:
 	return max_value
 
 
+func get_value_color(index: int) -> Color:
+	index = clamp(index, 0, get_value())
+	return container.get_child(index).get_color()
+
+
+func get_fill_size() -> Vector2:
+	return fill_size
+
+
 func get_percent() -> float:
 	return (get_value() / max_value) * 100
+
+
+func get_color() -> Color:
+	return color
 
 
 func set_value(value: int) -> void:
@@ -66,9 +83,8 @@ func set_value(value: int) -> void:
 			var f = fill.duplicate()
 			container.add_child(f)
 			f.set_visible(true)
-		else:
-			var f = container.get_child(i)
-			container.remove_child(f)
+			f.set_color(color)
+			f.set_custom_minimum_size(fill_size)
 
 
 func set_max_value(value: int) -> void:
@@ -77,8 +93,9 @@ func set_max_value(value: int) -> void:
 
 
 func set_color(color: Color) -> void:
+	self.color = color
 	for i in get_value():
-		container.get_child(i).set_color(color)
+		container.get_child(i).set_color(self.color)
 
 
 func set_value_color(index: int, color: Color) -> void:
@@ -87,14 +104,16 @@ func set_value_color(index: int, color: Color) -> void:
 
 
 func set_fill_size(value: Vector2) -> void:
-	var current_value: int = get_value()
+	fill_size = value
 	for i in get_value():
 		var f = container.get_child(i)
-		f.set_size(value)
+		f.set_custom_minimum_size(fill_size)
+#		f.set_size(value)
+	auto_resize_container()
 
 
 func set_container_size(value: int) -> void:
-	var fill_size = fill.get_size()
+#	var fill_size = fill.get_size()
 	container.set_size(Vector2(value*fill_size.x, fill_size.y))
 
 
@@ -110,7 +129,7 @@ func is_vertial() -> bool:
 
 func auto_resize_container() -> void:
 	var separation 	= container.get("theme_override_constants/separation")
-	var fill_size 	= fill.get_custom_minimum_size()
+#	var fill_size 	= fill.get_custom_minimum_size()
 	var final_size	= Vector2()
 	if is_horizontal():
 		final_size.x	= max_value * (fill_size.x + separation)
