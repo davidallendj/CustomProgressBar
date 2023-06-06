@@ -17,6 +17,7 @@ alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/h_separation = 16
 columns = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
@@ -37,6 +38,14 @@ text = "Max"
 layout_mode = 2
 alignment = 1
 
+[node name="Label6" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Separation"
+
+[node name="SetSeparation" type="SpinBox" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+alignment = 1
+
 [node name="Label3" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Fill size"
@@ -47,11 +56,26 @@ alignment = 1
 
 [node name="Label4" type="Label" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "Color"
+text = "Fill Color"
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
+
+[node name="Label5" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Resize"
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+item_count = 3
+selected = 2
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Fill"
+popup/item_1/id = 1
+popup/item_2/text = "Container"
+popup/item_2/id = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -63,7 +87,6 @@ text = "  -  "
 
 [node name="StylizedProgressBar" parent="VBoxContainer/HBoxContainer" instance=ExtResource("1_iayjx")]
 layout_mode = 2
-size_flags_horizontal = 4
 
 [node name="Increase" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

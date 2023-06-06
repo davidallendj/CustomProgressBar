@@ -1,24 +1,34 @@
+@tool
 extends PanelContainer
 
-@onready var fill 		:= %Fill
-@onready var container 	:= %Container
+@onready var fill 			:= %Fill
+@onready var container 		:= %Container
 
-@export var max_value	:= 10
-@export var fill_size	:= Vector2(5, 0)
-@export var color		:= Color.YELLOW
+@export var value			:= 0: 	get = get_value, set = set_value
+@export var max_value		:= 10: 	set = set_max_value
+@export var separation		:= 4: 	get = get_separation, set = set_separation
+@export var fill_size		:= Vector2(8, 0)
+@export var fill_direction 	:= FillDirection.LEFT_TO_RIGHT
+@export var fill_color		:= Color.YELLOW
+@export var auto_resize 	:= AutoResize.CONTAINER
 
-enum fill_direction{
+
+enum FillDirection {
 	LEFT_TO_RIGHT,
 	RIGHT_TO_LEFT,
 	TOP_TO_BOTTOM,
 	BOTTOM_TO_TOP
 }
 
-var direction = fill_direction.LEFT_TO_RIGHT
+enum AutoResize {
+	NONE,
+	FILL,
+	CONTAINER
+}
 
 
 func _ready() -> void:
-	auto_resize_container()
+	_auto_resize(auto_resize)
 
 
 func increment(value: int = 1) -> void:
@@ -31,7 +41,7 @@ func increment(value: int = 1) -> void:
 		var f = fill.duplicate()
 		container.add_child(f)
 		f.set_visible(true)
-		f.set_color(color)
+		f.set_color(fill_color)
 		f.set_custom_minimum_size(fill_size)
 
 
@@ -48,6 +58,10 @@ func clear() -> void:
 	for i in range(0, current_value, 1):
 		var f = container.get_child(0)
 		container.remove_child(f)
+
+
+func get_percent() -> float:
+	return (get_value() / max_value) * 100
 
 
 func get_value() -> int:
@@ -67,12 +81,16 @@ func get_fill_size() -> Vector2:
 	return fill_size
 
 
-func get_percent() -> float:
-	return (get_value() / max_value) * 100
-
-
 func get_color() -> Color:
-	return color
+	return fill_color
+
+
+func get_separation() -> int:
+	return container.get("theme_override_constants/separation")
+
+
+func set_percent(value: float) -> void:
+	set_value(floor(value * max_value))
 
 
 func set_value(value: int) -> void:
@@ -83,24 +101,28 @@ func set_value(value: int) -> void:
 			var f = fill.duplicate()
 			container.add_child(f)
 			f.set_visible(true)
-			f.set_color(color)
+			f.set_color(fill_color)
 			f.set_custom_minimum_size(fill_size)
 
 
 func set_max_value(value: int) -> void:
 	max_value = value
-	auto_resize_container()
+	_auto_resize()
 
 
-func set_color(color: Color) -> void:
-	self.color = color
+func set_color(fill_color: Color) -> void:
+	self.fill_color = fill_color
 	for i in get_value():
-		container.get_child(i).set_color(self.color)
+		container.get_child(i).set_color(self.fill_color)
 
 
-func set_value_color(index: int, color: Color) -> void:
+func set_separation(value: int) -> void:
+	container.set("theme_override_constants/separation", value)
+
+
+func set_value_color(index: int, fill_color: Color) -> void:
 	index = clamp(index, 0, get_value())
-	container.get_child(index).set_color(color)
+	container.get_child(index).set_color(fill_color)
 
 
 func set_fill_size(value: Vector2) -> void:
@@ -108,32 +130,51 @@ func set_fill_size(value: Vector2) -> void:
 	for i in get_value():
 		var f = container.get_child(i)
 		f.set_custom_minimum_size(fill_size)
-#		f.set_size(value)
-	auto_resize_container()
 
 
 func set_container_size(value: int) -> void:
-#	var fill_size = fill.get_size()
 	container.set_size(Vector2(value*fill_size.x, fill_size.y))
+
+
+func set_auto_resize(type: AutoResize) -> void:
+	auto_resize = type
 
 
 func is_horizontal() -> bool:
 	return \
-	direction == fill_direction.LEFT_TO_RIGHT or \
-	direction == fill_direction.RIGHT_TO_LEFT
+	fill_direction == FillDirection.LEFT_TO_RIGHT or \
+	fill_direction == FillDirection.RIGHT_TO_LEFT
 
 
 func is_vertial() -> bool:
 	return !is_horizontal()
 
 
-func auto_resize_container() -> void:
-	var separation 	= container.get("theme_override_constants/separation")
+func _auto_resize(v = auto_resize) -> void:
+	match v:
+		AutoResize.NONE: 									return
+		AutoResize.FILL: 		_auto_resize_fill(); 		return
+		AutoResize.CONTAINER: 	_auto_resize_container(); 	return
+
+
+func _auto_resize_container() -> void:
+	print("_auto_resize_container()")
+	var separation 	= get_separation()
 #	var fill_size 	= fill.get_custom_minimum_size()
-	var final_size	= Vector2()
+	var final_size	= get_size()
 	if is_horizontal():
-		final_size.x	= max_value * (fill_size.x + separation)
+		final_size.x = max_value * (fill_size.x + separation)
 	else:
-		final_size.y 	= max_value * (fill_size.x +separation)
+		final_size.y = max_value * (fill_size.x +separation)
 	container.set_custom_minimum_size(final_size)
 	container.set_size(final_size)
+
+
+func _auto_resize_fill() -> void:
+	print("_auto_resize_fill()")
+	var container_size 	= container.get_size()
+	var separation 		= get_separation()
+	var x 				= floor((container_size.x / max_value) - separation) 
+	var y				= container_size.y
+	set_fill_size(Vector2(x, y))
+	
